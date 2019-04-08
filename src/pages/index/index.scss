@@ -1,3 +1,29 @@
-.display{
-  display: none;
+
+.index{
+  .banner{
+    width: 100%;
+    height: 378px;
+  }
+  .hidden{
+    display: none;
+  }
+  .opera-cates{
+    width: 100%;
+    padding: 10px 10px;
+    .cate-item{
+      width: 200px;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      .icon{
+        width: 100px;
+        height: 100px;
+      }
+      .text{
+        font-size :28px;
+      }
+    }
+  }
 }

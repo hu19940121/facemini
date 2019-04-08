@@ -1,66 +1,37 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
+import { View, Button,Image, Text } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
-// let qiniuUploader = require('../../utils/qiniuUploader.js');
 import qiniuUploader from '../../utils/qiniuUploader'
+import http  from '../../service/http'
 import './index.scss'
 
-@inject('counterStore')
+@inject('counterStore','commonStore')
 @observer
 class Index extends Component {
   constructor (props) {
     super(props)
     this.state = { 
-      imgBucketUrl: '', //七牛url
-      imgToken: '', //七牛token
-      imgUrl: '',
-      faceInfo: {}
+      imgUrl: null,
+      faceInfo: {},
+      banner: 'http://resource.kaier001.com/banenr.jpg',
+      yanzhi: 'http://resource.kaier001.com/yanzhi.png'
     }
   }
   config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '首页',
   }
-
-  componentWillMount () { }
-
-  componentWillReact () {
-    console.log('componentWillReact')
-  }
-
   componentDidMount () { 
     this.getQiniuToken()
   }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
-  increment = () => {
-    const { counterStore } = this.props
-    counterStore.increment()
-  }
-
-  decrement = () => {
-    const { counterStore } = this.props
-    counterStore.decrement()
-  }
-
-  incrementAsync = () => {
-    const { counterStore } = this.props
-    counterStore.incrementAsync()
-  }
   upLoadImg = () => {
     let that = this
-    const { imgBucketUrl,imgToken } = this.state
+    const { commonStore: { imgBucketUrl,imgToken } } = this.props
     Taro.chooseImage().then(res=>{
       qiniuUploader.upload(res.tempFilePaths[0], (respic) => {
         this.setState({
           imgUrl: respic.imageURL
         })
         that.face(respic.imageURL)
-        console.log(respic);
       }, (error) => {
         console.log('error: ' + error);
       }, {
@@ -70,44 +41,35 @@ class Index extends Component {
       });      
     })
   }
+  //获取七牛token和url
   getQiniuToken() {
-    Taro.request({url: 'http://192.168.1.102:8080/api/v1/getQiniuToken',method:'get',})
-    .then(res => {      
-      this.setState({
-        imgBucketUrl: res.data.url,
-        imgToken: res.data.token
-      })
-    })
-    .catch(err=>console.log(err))
+    const { commonStore } = this.props
+    commonStore.getQiniuToken()
   }
-  face(image) {
-    Taro.request({url: 'http://192.168.1.102:8080/api/v1/faceAPI',
-      method:'get',  
-      data: {
-        image
-      }
-    })
-    .then(res => {      
-      console.log(res.data);
+  async face(image) {
+    let res = await http.get('api/v1/faceAPI',{ image })
+    console.log('res',res);
+    if (res.data) {
       this.setState({
-        faceInfo: res.data.data.face_list[0]
+        faceInfo: res.data.face_list[0]
       })
-    })
-    .catch(err=>console.log(err))
+    }
   }
   render () {
-    const { imgUrl, faceInfo } = this.state
-    const { counterStore: { counter } } = this.props
+    const { imgUrl, faceInfo ,banner,yanzhi } = this.state
+    // const { counterStore: { counter } } = this.props
     return (
       <View className='index'>
-        <Button onClick={this.increment}>+</Button>
-        <Button onClick={this.decrement}>-</Button>
-        <Button onClick={this.incrementAsync}>Add Async</Button>
-        <Text>{counter}</Text>
-
-        <image src={imgUrl}></image>
-        <Button onClick={this.upLoadImg}>上传图片</Button>
-        <View className={faceInfo.age ? '' : 'display'}>
+        <Image className='banner' src={banner}></Image>
+        <Image style={imgUrl? '': 'display:none'} src={imgUrl}></Image>
+        {/* <Button onClick={this.upLoadImg} className='btn-max-w' plain type='primary'>上传图片</Button> */}
+        <View className='opera-cates'>
+          <View onClick={this.upLoadImg} className='cate-item'>
+            <Image src={yanzhi} className='icon'></Image>
+            <Text className='text'>测颜值</Text>
+          </View>
+        </View>
+        <View className={faceInfo.age ? '' : 'hidden'}>
           <View>年龄{ faceInfo.age }</View>
           <View>性别{ faceInfo.gender.type } 可信度 { faceInfo.gender.probability }</View>
           <View>颜值{ faceInfo.beauty }</View>

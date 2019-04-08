@@ -1,8 +1,10 @@
 import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/mobx'
 import Index from './pages/index'
-
+// eslint-disable-next-line import/first
+import '@tarojs/async-await'
 import counterStore from './store/counter'
+import commonStore from './store/common'
 
 import './app.scss'
 
@@ -13,7 +15,8 @@ import './app.scss'
 // }
 
 const store = {
-  counterStore
+  counterStore,
+  commonStore
 }
 
 class App extends Component {
