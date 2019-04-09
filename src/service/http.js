@@ -1,7 +1,8 @@
 import Taro from '@tarojs/taro'
 
 const token = ''
-const base = "http://192.168.1.104:8080/";
+// const base = "http://192.168.1.104:8080/";
+const base = "https://www.kaier001.com/";
 //拦截器配置
 const interceptor = function (chain) {
   const requestParams = chain.requestParams

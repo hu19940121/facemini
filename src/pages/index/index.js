@@ -5,7 +5,7 @@ import qiniuUploader from '../../utils/qiniuUploader'
 import http  from '../../service/http'
 import './index.scss'
 
-@inject('counterStore','commonStore')
+@inject('counterStore','commonStore','imageStore')
 @observer
 class Index extends Component {
   constructor (props) {
@@ -14,7 +14,10 @@ class Index extends Component {
       imgUrl: null,
       faceInfo: {},
       banner: 'http://resource.kaier001.com/banenr.jpg',
-      yanzhi: 'http://resource.kaier001.com/yanzhi.png'
+      yanzhi: 'http://resource.kaier001.com/yanzhi.png',
+      aixin:'http://resource.kaier001.com/aixin.png',
+      mingxing: 'http://resource.kaier001.com/mingxing.png',
+      sorryImg: 'http://resource.kaier001.com/sorry.jpg'
     }
   }
   config = {
@@ -23,15 +26,28 @@ class Index extends Component {
   componentDidMount () { 
     this.getQiniuToken()
   }
+  //未开放
+  noOpen = () =>{
+    // 注意：无论用户点击确定还是取消，Promise 都会 resolve。
+    Taro.showModal({
+      title: '提示',
+      content: '暂未开放此功能~',
+    })
+    .then(res => console.log(res.confirm, res.cancel))
+  }
   upLoadImg = () => {
-    let that = this
-    const { commonStore: { imgBucketUrl,imgToken } } = this.props
+    // let that = this
+    const { commonStore: { imgBucketUrl,imgToken }, imageStore } = this.props
     Taro.chooseImage().then(res=>{
       qiniuUploader.upload(res.tempFilePaths[0], (respic) => {
-        this.setState({
-          imgUrl: respic.imageURL
+        imageStore.setImage(respic.imageURL)
+        Taro.navigateTo({
+          url: '/pages/handsome/handsome?id=2&type=test'
         })
-        that.face(respic.imageURL)
+        // this.setState({
+        //   imgUrl: respic.imageURL
+        // })
+        // that.face(respic.imageURL)
       }, (error) => {
         console.log('error: ' + error);
       }, {
@@ -46,35 +62,30 @@ class Index extends Component {
     const { commonStore } = this.props
     commonStore.getQiniuToken()
   }
-  async face(image) {
-    let res = await http.get('api/v1/faceAPI',{ image })
-    console.log('res',res);
-    if (res.data) {
-      this.setState({
-        faceInfo: res.data.face_list[0]
-      })
-    }
-  }
   render () {
-    const { imgUrl, faceInfo ,banner,yanzhi } = this.state
+    const { imgUrl ,banner,yanzhi,aixin, mingxing, sorryImg } = this.state
     // const { counterStore: { counter } } = this.props
     return (
       <View className='index'>
         <Image className='banner' src={banner}></Image>
         <Image style={imgUrl? '': 'display:none'} src={imgUrl}></Image>
-        {/* <Button onClick={this.upLoadImg} className='btn-max-w' plain type='primary'>上传图片</Button> */}
         <View className='opera-cates'>
           <View onClick={this.upLoadImg} className='cate-item'>
             <Image src={yanzhi} className='icon'></Image>
             <Text className='text'>测颜值</Text>
           </View>
+          <View onClick={this.noOpen} className='cate-item'>
+            <Image src={aixin} className='icon'></Image>
+            <Text className='text'>夫妻相测试</Text>
+          </View>
+          <View onClick={this.noOpen} className='cate-item'>
+            <Image src={mingxing} className='icon'></Image>
+            <Text className='text'>明星相</Text>
+          </View>
         </View>
-        <View className={faceInfo.age ? '' : 'hidden'}>
-          <View>年龄{ faceInfo.age }</View>
-          <View>性别{ faceInfo.gender.type } 可信度 { faceInfo.gender.probability }</View>
-          <View>颜值{ faceInfo.beauty }</View>
-          <View>表情{ faceInfo.expression.type } 可信度 { faceInfo.expression.probability }</View>
-          <View>脸型{ faceInfo.face_shape.type } 可信度 { faceInfo.face_shape.probability }</View>
+        <View className='sorry'>
+          <Image mode='aspectFit' className='sorry-image' src={sorryImg}></Image>
+          <Text>更多功能近期开放，敬请期待~</Text>
         </View>
       </View>
     )

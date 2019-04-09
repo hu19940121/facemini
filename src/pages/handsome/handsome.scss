@@ -1,0 +1,32 @@
+.handsome{
+  .hidden{
+    display: none;
+  }
+  .scan-wrapper{
+    position: relative;
+    width: 100%;
+    height: 380px;
+    border-radius: 100% 100% 100% 100% / 0% 0% 30% 30%;
+
+    overflow: hidden;
+    .scan-image{
+      width: 100%;
+      height :100%;
+      border-radius: 100% 100% 100% 100% / 0% 0% 30% 30%;
+    }
+    .scan{
+      position: absolute;
+      // top: -380px;
+      width: 100%;
+      height:380px;
+      background:linear-gradient(rgba(105, 207, 160, 0.3),rgba(4, 236, 236, 0.904));
+    }
+    .top380{
+      top: -380px;
+    }
+  }
+  .result-wrapper{
+    margin-top:40px;
+    text-align: center;
+  }
+}

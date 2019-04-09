@@ -1,8 +1,10 @@
 
 .index{
+  padding:10px;
   .banner{
     width: 100%;
     height: 378px;
+    border-radius: 10px;
   }
   .hidden{
     display: none;
@@ -10,6 +12,9 @@
   .opera-cates{
     width: 100%;
     padding: 10px 10px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: nowrap;
     .cate-item{
       width: 200px;
       height: 200px;
@@ -24,6 +29,14 @@
       .text{
         font-size :28px;
       }
+    }
+  }
+  .sorry{
+    padding-top:20px;
+    text-align: center;
+    .sorry-image{
+      height: 400px;
+      display: block;
     }
   }
 }

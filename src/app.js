@@ -1,10 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/mobx'
 import Index from './pages/index'
+import Handsome from './pages/handsome'
+
 // eslint-disable-next-line import/first
 import '@tarojs/async-await'
 import counterStore from './store/counter'
 import commonStore from './store/common'
+import imageStore from './store/image'
 
 import './app.scss'
 
@@ -16,20 +19,22 @@ import './app.scss'
 
 const store = {
   counterStore,
-  commonStore
+  commonStore,
+  imageStore
 }
 
 class App extends Component {
 
   config = {
     pages: [
-      'pages/index/index'
+      'pages/index/index',
+      'pages/handsome/handsome'
     ],
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
+      navigationBarBackgroundColor: '#1E90FF',
       navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
+      navigationBarTextStyle: 'white'
     }
   }
 
@@ -47,6 +52,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Index />
+        <Handsome />
       </Provider>
     )
   }
