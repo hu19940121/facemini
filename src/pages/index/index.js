@@ -1,8 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Button,Image, Text } from '@tarojs/components'
+import { View,Image, Text } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import qiniuUploader from '../../utils/qiniuUploader'
-import http  from '../../service/http'
 import './index.scss'
 
 @inject('counterStore','commonStore','imageStore')
@@ -12,7 +11,6 @@ class Index extends Component {
     super(props)
     this.state = { 
       imgUrl: null,
-      faceInfo: {},
       banner: 'http://resource.kaier001.com/banenr.jpg',
       yanzhi: 'http://resource.kaier001.com/yanzhi.png',
       aixin:'http://resource.kaier001.com/aixin.png',
@@ -44,10 +42,6 @@ class Index extends Component {
         Taro.navigateTo({
           url: '/pages/handsome/handsome?id=2&type=test'
         })
-        // this.setState({
-        //   imgUrl: respic.imageURL
-        // })
-        // that.face(respic.imageURL)
       }, (error) => {
         console.log('error: ' + error);
       }, {
@@ -64,7 +58,6 @@ class Index extends Component {
   }
   render () {
     const { imgUrl ,banner,yanzhi,aixin, mingxing, sorryImg } = this.state
-    // const { counterStore: { counter } } = this.props
     return (
       <View className='index'>
         <Image className='banner' src={banner}></Image>
