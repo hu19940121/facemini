@@ -24,13 +24,15 @@ class Handsome extends Component {
   config = {
     navigationBarTitleText: '颜值',
   }
-  componentDidMount () { 
+  componentDidMount () {
     // const { imageStore: { image } } = this.props
   }
   imageOnload = () => {
+    const params = this.$router.params;
+    console.log('formid-----------------------params',params);
     const { imageStore: { image } } = this.props
     this.startScan()
-    http.get('api/v1/faceAPI',{ image }).then(res=>{
+    http.get('api/v1/faceAPI',{ image,form_id:params.formId }).then(res=>{
       console.log('res',res);
       this.endScan()
       if (res.data) {

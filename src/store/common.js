@@ -6,8 +6,8 @@ const commonStore = observable({
   imgToken:'',
   async getQiniuToken() {
     let res = await http.get('api/v1/getQiniuToken')
-    this.imgBucketUrl = res.url
-    this.imgToken = res.token
+    this.imgBucketUrl = res.data.url
+    this.imgToken = res.data.token
   }
 })
 export default commonStore

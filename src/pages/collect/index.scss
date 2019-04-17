@@ -1,0 +1,15 @@
+.box{
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin:0;
+  text-align: left;
+  border-radius: 0;
+  color:#000;
+  background:transparent;
+  // line-height: 0;
+  border:none;
+}
+button::after{
+  border:none;
+}

@@ -4,7 +4,7 @@
 	"description": "人脸识别小程序",
 	"appid": "wxf94fea15bf8dd485",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": false,
 		"postcss": false,
 		"minified": false,
@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 1,
+			"current": 2,
 			"list": [
 				{
 					"id": -1,
@@ -43,6 +43,13 @@
 					"id": -1,
 					"name": "个人中心",
 					"pathName": "pages/personal/personal",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "poster",
+					"pathName": "pages/poster/poster",
 					"scene": null
 				}
 			]

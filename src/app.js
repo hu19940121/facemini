@@ -3,14 +3,16 @@ import { Provider } from '@tarojs/mobx'
 import Index from './pages/index'
 import Handsome from './pages/handsome'
 import Personal from './pages/Personal'
-
+import Poster from './pages/Poster'
 // eslint-disable-next-line import/first
 import '@tarojs/async-await'
 import counterStore from './store/counter'
 import commonStore from './store/common'
 import imageStore from './store/image'
+import userStore from './store/user'
 
 import './app.scss'
+// eslint-disable-next-line import/first
 import 'taro-ui/dist/style/index.scss' // 全局引入一次即可
 
 // 如果需要在 h5 环境中开启 React Devtools
@@ -22,7 +24,8 @@ import 'taro-ui/dist/style/index.scss' // 全局引入一次即可
 const store = {
   counterStore,
   commonStore,
-  imageStore
+  imageStore,
+  userStore
 }
 
 class App extends Component {
@@ -31,7 +34,9 @@ class App extends Component {
     pages: [
       'pages/index/index',
       'pages/handsome/handsome',
-      'pages/personal/personal'
+      'pages/personal/personal',
+      'pages/poster/poster'
+
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -74,6 +79,7 @@ class App extends Component {
         <Index />
         <Handsome />
         <Personal />
+        <Poster />
       </Provider>
     )
   }
