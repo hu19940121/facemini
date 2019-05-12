@@ -1,10 +1,11 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View } from '@tarojs/components'
+import { View,Image } from '@tarojs/components'
 import { AtButton } from 'taro-ui'
 import { observer, inject } from '@tarojs/mobx'
-import urlEncode from '../../utils/util'
+import { urlEncode } from '../../utils/util'
 import http  from '../../service/http'
 import './index.scss'
+import kobe from './images/kobe.png'
 
 @inject('userStore')
 @observer
@@ -59,6 +60,7 @@ class Auth extends Component {
   render () {
     return (
       <View className='auth'>
+        <Image src={kobe}  mode='aspectFit' />
         <AtButton className='logo-btn' openType='getUserInfo' onGetUserInfo={this.onGetUserInfo}>确认授权</AtButton>
       </View>
     )
