@@ -1,4 +1,8 @@
 .handsome{
+  position: relative;
+  text-align: center;
+  width: 100%;
+  height:100vh;
   .hidden{
     display: none;
   }
@@ -26,7 +30,96 @@
     }
   }
   .result-wrapper{
-    margin-top:40px;
-    text-align: center;
+    .bg-image{
+      position: absolute;
+      top:0;
+      left:0;
+      width: 100%;
+      height:1125px;
+    }
+    .facecontainer {
+      position: absolute;
+      top: 122px;
+      left: 5px;
+      width: 100%;
+      height: 436rpx;
+      .face{
+        width: 418rpx;
+        height: 418rpx;
+        border-radius: 50%;
+        display: inline-block;
+      }
+    }
+    .tiezhi{
+      position: absolute;
+      top: 450px;
+      width: 100%;
+      height: 190rpx;
+      display: block;
+    }
+    .fenzhi{
+      position: absolute;
+      top: 500px;
+      left:0;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      font-size: 48px;
+
+    }
+    .result-wrapper{
+      position: absolute;
+      top: 690px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 680px;
+      .result{
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 54px;
+        border-radius: 30px;
+        background-color: #ec30fc;
+        font-size: 26px;
+        color:#fff;
+        margin-bottom: 20px;
+        &-left{
+          flex: 1;
+          border-right: 1px solid  #9b70f6
+        }
+        &-right{
+          flex: 1
+        }
+        .tit{
+          color: #bf9af3
+        }
+      }
+    }
+    .page_down{
+      position: absolute;
+      bottom: 0;
+      left:0;
+      height: 270px;
+      width: 100%;
+      .page_down_img{
+        width: 100%;
+        height: 100%;
+      }
+      .tips-wrapper{
+        color:#fff;
+        position: absolute;
+        width: 100%;
+        height: 200px;
+        bottom: 0;
+        left: 0;
+        font-size: 30px;
+        .restart-btn{
+          width: 300px;
+          background-color: #81d134;
+          color:#fff;
+          margin-bottom: 20px;
+        }
+      }
+    }
   }
 }

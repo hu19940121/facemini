@@ -2,6 +2,8 @@ import Taro, { Component } from '@tarojs/taro'
 import { View,Button  } from '@tarojs/components'
 // import { AtButton } from 'taro-ui'
 import http  from '../../service/http'
+import { random }  from '../../utils/util'
+import './poster.scss'
 
 // import Poster from 'wxa-plugin-canvas'
 
@@ -20,7 +22,8 @@ class Poster extends Component {
     this.getFaceInfo()
   }
   config = {
-    navigationBarTitleText: '海报',
+    navigationBarTitleText: '颜值海报',
+    navigationBarBackgroundColor: '#8526fb',
     usingComponents:{
       'painter':'../../components/painter/painter'
     }
@@ -32,12 +35,12 @@ class Poster extends Component {
         let score_info = JSON.parse(faceInfo.score_info)
         let face = score_info.face_list[0]        
         console.log(score_info,face);
-        
+        const peopleNum = random(100,200)
         this.setState({
           posterData:{
             width: '654rpx',
             height: '1000rpx',
-            background: 'https://resource.kaier001.com/posterBG.jpg',
+            background: 'https://resource.kaier001.com/muban.png',
             borderRadius: '10rpx',
             views: [
               {
@@ -45,10 +48,10 @@ class Poster extends Component {
                 url: faceInfo.face_img,
                 css: {
                   borderRadius: '150rpx',
-                  width: '300rpx',
+                  width: '318rpx',
                   left:'177rpx',
-                  height: '300rpx',
-                  top: '90rpx',
+                  height: '318rpx',
+                  top: '190rpx',
                   mode: 'scaleToFill',
                 },
               },
@@ -64,24 +67,35 @@ class Poster extends Component {
               },
               {
                 type: 'text',
-                text: '分数'+ face.beauty + '',
+                text: face.beauty + '',
                 // left:'中间',
                 css: {
                   align:'center',
                   fontSize: '60rpx',
                   left:'327rpx',
                   // left:'130px',
-                  top: '420rpx',
+                  top: '680rpx',
                   color:'#fff',
+                },
+              },
+              {
+                type: 'text',
+                text: peopleNum + '名',
+                css: {
+                  fontSize: '34rpx',
+                  left:'80px',
+                  // left:'130px',
+                  bottom: '136rpx',
+                  color:'red',
                 },
               },
               {
                 type: 'image',
                 url: 'https://resource.kaier001.com/xcxm.jpg',
                 css: {
-                  width: '200rpx',
-                  left:'227rpx',
-                  height: '200rpx',
+                  width: '160rpx',
+                  right:'10rpx',
+                  height: '160rpx',
                   bottom: '20rpx',
                   mode: 'scaleToFill',
                 },
@@ -155,7 +169,9 @@ class Poster extends Component {
         <painter dirty  customStyle='margin-left:44rpx;margin-top:44rpx' palette={posterData} onImgOK={this.onImgOK} />
         <View className='btn-wrapper' style={isCreate? '': 'display:none'}>
           {btn}
-          <Button openType='share' className='btns' type='secondary'>分享给好友</Button>
+          {/* <Collect> */}
+            <Button openType='share' className='btns' type='secondary'>分享给好友</Button>
+          {/* </Collect> */}
         </View>
       </View>
     )

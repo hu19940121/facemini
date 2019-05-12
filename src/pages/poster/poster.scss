@@ -1,11 +1,12 @@
 .poster{
   .btn-wrapper{
-    width: 80%;
-    margin: 0 auto;
+    width: 100%;
     display: flex;
     padding-top:30px;
-    justify-content: space-between;
+    // text-align: center;
+    // justify-content: space-around;
     .btns{
+      // display: block;
       // width: 200px;
     }
   }
