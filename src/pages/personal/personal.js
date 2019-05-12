@@ -3,7 +3,7 @@ import { View,Text,Image } from '@tarojs/components'
 import { AtButton, AtListItem } from 'taro-ui'
 import { observer, inject } from '@tarojs/mobx'
 // import qiniuUploader from '../../utils/qiniuUploader'
-import http  from '../../service/http'
+// import http  from '../../service/http'
 import './personal.scss'
 import Collect from '../collect'
 
@@ -35,31 +35,36 @@ class Personal extends Component {
       duration: 2000
     })
   }
-  getUserInfo = () => {
-    const { userStore } = this.props
-    userStore.getUserInfo().then(()=>{
-      console.log('Taro.getStorageSync()',Taro.getStorageSync('userInfo'))
-      this.setState({
-        userInfo:Taro.getStorageSync('userInfo')
-      })
+  //跳到授权页面
+  linkToAuth = ()=>{
+    Taro.navigateTo({
+      url: '/pages/auth/auth'
     })
   }
-  onGetUserInfo = (userInfo) => {
-    if (userInfo.detail.userInfo) {//同意
-      Taro.login().then(res=>{
-        let params = {
-          code: res.code,
-          signature:userInfo.currentTarget.signature,
-          encryptedData: userInfo.currentTarget.encryptedData,
-          iv:userInfo.currentTarget.iv,
-        }
-        http.post('api/v1/xcxLogin',params).then(result=>{
-          Taro.setStorageSync('sessionkey', result.data)
-          this.getUserInfo()
-        })
-      })
-    }
-  }
+  // getUserInfo = () => {
+  //   const { userStore } = this.props
+  //   userStore.getUserInfo().then(()=>{
+  //     this.setState({
+  //       userInfo:Taro.getStorageSync('userInfo')
+  //     })
+  //   })
+  // }
+  // onGetUserInfo = (userInfo) => {
+  //   if (userInfo.detail.userInfo) {//同意
+  //     Taro.login().then(res=>{
+  //       let params = {
+  //         code: res.code,
+  //         signature:userInfo.currentTarget.signature,
+  //         encryptedData: userInfo.currentTarget.encryptedData,
+  //         iv:userInfo.currentTarget.iv,
+  //       }
+  //       http.post('api/v1/xcxLogin',params).then(result=>{
+  //         Taro.setStorageSync('sessionkey', result.data)
+  //         this.getUserInfo()
+  //       })
+  //     })
+  //   }
+  // }
   render () {
     const { defaultAvatar,userInfo } = this.state  
     // const {userStore:{ userInfo }  } =  this.props
@@ -73,9 +78,9 @@ class Personal extends Component {
       )
     } else {
       left = (
-        <View className='left'>
+        <View className='left' onClick={this.linkToAuth}>
           <View >请登录</View>
-          <AtButton className='logo-btn' type='secondary' size='small' openType='getUserInfo' onGetUserInfo={this.onGetUserInfo}>点击登录，享受更多精彩信息</AtButton>
+          <AtButton className='logo-btn' type='secondary' size='small'>点击登录，享受更多精彩信息</AtButton>
         </View>
       )
     }

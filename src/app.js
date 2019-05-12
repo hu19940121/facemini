@@ -4,6 +4,9 @@ import Index from './pages/index'
 import Handsome from './pages/handsome'
 import Personal from './pages/Personal'
 import Poster from './pages/Poster'
+import Movie from './pages/Movie'
+import Auth from './pages/Auth'
+
 // eslint-disable-next-line import/first
 import '@tarojs/async-await'
 import counterStore from './store/counter'
@@ -35,8 +38,9 @@ class App extends Component {
       'pages/index/index',
       'pages/handsome/handsome',
       'pages/personal/personal',
-      'pages/poster/poster'
-
+      'pages/poster/poster',
+      'pages/movie/movie',
+      'pages/auth/auth',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -80,6 +84,8 @@ class App extends Component {
         <Handsome />
         <Personal />
         <Poster />
+        <Movie />
+        <Auth />
       </Provider>
     )
   }

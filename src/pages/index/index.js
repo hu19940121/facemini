@@ -26,6 +26,10 @@ class Index extends Component {
   componentDidMount () { 
     this.getQiniuToken()
     this.getBanner()
+    // eslint-disable-next-line no-undef
+    wx.showShareMenu({
+      withShareTicket: true
+    })
   }
   getBanner() {
     http.get('api/v1/getBanner').then(res=>{      
@@ -35,17 +39,11 @@ class Index extends Component {
     })
   }
   formSubmit = e => {
-    console.log('e.detail.formId',e.detail.formId)
     const formId = e.detail.formId
     this.upLoadImg(formId)
-    // http.get('api/v1/templateMessageSend',{formId}).then(res=>{
-    //   console.log(res);
-    // })
   }
   //未开放
-  noOpen = () =>{
-    console.log('noopen');
-    
+  noOpen = () =>{    
     // 注意：无论用户点击确定还是取消，Promise 都会 resolve。
     Taro.showModal({
       title: '提示',
@@ -63,11 +61,13 @@ class Index extends Component {
       })
       .then(res => {
         if (res.confirm) {
-          Taro.switchTab({
-            url: '/pages/personal/personal'
+          Taro.navigateTo({
+            url: '/pages/auth/auth'
           })
+          // Taro.switchTab({
+          //   url: '/pages/personal/personal'
+          // })
         }
-        console.log(res.confirm, res.cancel)
       })
       return false
     }
@@ -96,6 +96,7 @@ class Index extends Component {
     const { yanzhi,aixin, mingxing, sorryImg,bannerList } = this.state
     return (
       <View className='index'>
+        <official-account></official-account>
         <View className='banner'>
           <Swiper
             indicatorColor='#999'
@@ -115,15 +116,11 @@ class Index extends Component {
               }
           </Swiper>
         </View>
-        {/* <Image style={imgUrl? '': 'display:none'} src={imgUrl}></Image> */}
         <View className='opera-cates'>
           <Collect onClick={this.upLoadImg}>
             <View  className='cate-item'>
               <Image src={yanzhi} className='icon'></Image>
               <Text className='text'>测颜值</Text>
-                {/* <Form reportSubmit onSubmit={this.formSubmit} className='form'>
-                  <AtButton className='testFace-btn' formType='submit' type='primary' size='small'>测颜值</AtButton>
-              </Form> */}
             </View>
           </Collect>
           <Collect onClick={this.noOpen}>
@@ -145,9 +142,6 @@ class Index extends Component {
             <Text>更多功能近期开放，敬请期待~</Text>
           </View>
         </Collect>
-        {/* <Form reportSubmit onSubmit={this.formSubmit} >
-          <AtButton formType='submit' type='primary' size='small'>按钮文案</AtButton>
-      </Form> */}
       </View>
     )
   }

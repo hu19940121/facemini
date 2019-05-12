@@ -28,11 +28,10 @@ class Poster extends Component {
   getFaceInfo() {
     http.get('api/v1/getFaceInfo').then(result=>{
       const faceInfo = result.data
-      if (faceInfo) {
-        let score_info = JSON.parse(faceInfo.score_info)
-        let face = score_info.face_list[0]        
-        console.log(score_info,face);
-        
+      if (faceInfo.score_info !== 'null') {
+          let score_info = JSON.parse(faceInfo.score_info)
+          let face = score_info.face_list[0] 
+          console.log(score_info,face);
         this.setState({
           posterData:{
             width: '654rpx',

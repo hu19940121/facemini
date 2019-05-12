@@ -1,8 +1,8 @@
 import Taro from '@tarojs/taro'
 // import { AtToast } from "taro-ui"
 // const sessionkey = ''
-const base = "http://192.168.1.106:8080/";
-// const base = "https://www.kaier001.com/";
+// const base = "http://192.168.1.106:8080/";
+const base = "https://www.kaier001.com/";
 //拦截器配置
 const interceptor = function (chain) {
   const requestParams = chain.requestParams  
@@ -19,8 +19,8 @@ const interceptor = function (chain) {
         Taro.removeStorageSync('sessionkey')
         Taro.removeStorageSync('userInfo')
         // eslint-disable-next-line no-undef
-        Taro.switchTab({
-          url: '/pages/personal/personal'
+        Taro.navigateTo({
+          url: '/pages/auth/auth'
         })
         return
       }
