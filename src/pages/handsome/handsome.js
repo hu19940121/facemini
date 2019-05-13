@@ -1,6 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Button,Image, Text } from '@tarojs/components'
-import { observer, inject } from '@tarojs/mobx'
+import { connect } from '@tarojs/redux'
+import { onSetImage } from '../../actions/image'
+
 import { judgeGender,judgeExpression } from './judge'
 import http  from '../../service/http'
 import qiniuUploader from '../../utils/qiniuUploader'
@@ -10,8 +12,14 @@ import tiezhi from './images/tiezhi.png'
 import page_down from './images/page_down.png'
 
 let timer = null
-@inject('imageStore','commonStore')
-@observer
+@connect(({ image,common }) => ({
+  image,
+  common
+}), (dispatch) => ({
+  onSetImage () {
+    dispatch(onSetImage())
+  },
+}))
 class Handsome extends Component {
   constructor (props) {
     super(props)
@@ -36,13 +44,12 @@ class Handsome extends Component {
     this.setState({
       userInfo
     })
-    // const { imageStore: { image } } = this.props
   }
   upLoadImg = ()=> {
-    const { commonStore: { imgBucketUrl,imgToken }, imageStore } = this.props
+    const { imgBucketUrl,imgToken  } = this.props.common
     Taro.chooseImage().then(res=>{
       qiniuUploader.upload(res.tempFilePaths[0], (respic) => {
-        imageStore.setImage(respic.imageURL)
+        this.props.onSetImage(respic.imageURL)
       }, (error) => {
         console.log('error: ' + error);
       }, {
@@ -53,7 +60,7 @@ class Handsome extends Component {
     })
   }
   imageOnload = () => {
-    const { imageStore: { image } } = this.props
+    const {  image  } = this.props.image
     this.setState({scanning: true})
     this.startScan()
     http.get('api/v1/faceAPI',{ image }).then(res=>{
@@ -98,7 +105,7 @@ class Handsome extends Component {
   }
 
   render () {
-    const { imageStore: { image } } = this.props
+    const {  image  } = this.props.image
     const { top,faceInfo, isface, scanning,faceImg,userInfo } = this.state    
     return (
       <View className='handsome'>
@@ -146,13 +153,6 @@ class Handsome extends Component {
               </View>
 
             </View>
-            {/* <View>
-              <View>年龄： { faceInfo.age }</View>
-              <View>性别: { judgeGender(faceInfo.gender.type) } ；可信度 { faceInfo.gender.probability }</View>
-              <View>颜值：{ faceInfo.beauty }</View>
-              <View>表情：{ judgeExpression(faceInfo.expression.type) } ；可信度：{ faceInfo.expression.probability }</View>
-              <View>脸型：{ judgeFaceShape(faceInfo.face_shape.type) } ；可信度：{ faceInfo.face_shape.probability }</View>
-            </View> */}
           </View>
         </View>
         <View className={`result-wrapper ${ isface ? "hidden" : "" }`}>

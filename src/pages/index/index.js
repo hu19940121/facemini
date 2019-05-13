@@ -1,14 +1,27 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View,Image, Text,Swiper, SwiperItem } from '@tarojs/components'
 // import { AtButton } from 'taro-ui'
-import { observer, inject } from '@tarojs/mobx'
+// import { observer, inject } from '@tarojs/mobx'
+import { connect } from '@tarojs/redux'
 import qiniuUploader from '../../utils/qiniuUploader'
 import './index.scss'
-import Collect from '../collect'
+import Collect from '../components/collect'
 import http  from '../../service/http'
-
-@inject('counterStore','commonStore','imageStore')
-@observer
+import { onGetQiniuToken } from '../../actions/common'
+import { onSetImage } from '../../actions/image'
+// @inject('counterStore','commonStore','imageStore')
+// @observer
+@connect(({ common,image }) => ({
+  common,
+  image
+}), (dispatch) => ({
+  onGetQiniuToken () {
+    dispatch(onGetQiniuToken())
+  },
+  onSetImage (image) {
+    dispatch(onSetImage(image))
+  },
+}))
 class Index extends Component {
   constructor (props) {
     super(props)
@@ -22,17 +35,26 @@ class Index extends Component {
   }
   config = {
     navigationBarTitleText: '首页',
+    backgroundTextStyle:'dark',
+    enablePullDownRefresh: true
+  }
+  onPullDownRefresh(){
+    Taro.stopPullDownRefresh()//停止下拉动作过渡
+    this.getBanner()
   }
   componentDidMount () { 
-    this.getQiniuToken()
-    this.getBanner()
+    this.props.onGetQiniuToken()
+    // this.getQiniuToken()
     // eslint-disable-next-line no-undef
     wx.showShareMenu({
       withShareTicket: true
-    })
+    })  
+  }
+  componentDidShow() {
+    this.getBanner()
   }
   getBanner() {
-    http.get('api/v1/getBanner').then(res=>{      
+    http.get('api/v1/getBanner',{},false).then(res=>{      
       this.setState({
         bannerList:res.data
       })
@@ -71,10 +93,15 @@ class Index extends Component {
       })
       return false
     }
-    const { commonStore: { imgBucketUrl,imgToken }, imageStore } = this.props
+    // const { commonStore: { imgBucketUrl,imgToken }, imageStore } = this.props
+    const { imgBucketUrl,imgToken } = this.props.common
+    console.log('imgBucketUrl,imgToken',imgBucketUrl,imgToken);
+    
     Taro.chooseImage().then(res=>{
       qiniuUploader.upload(res.tempFilePaths[0], (respic) => {
-        imageStore.setImage(respic.imageURL)
+        console.log('respic.imageURL',respic.imageURL);
+        
+        this.props.onSetImage(respic.imageURL)
         Taro.navigateTo({
           url: '/pages/handsome/handsome?formId=' + formId
         })
@@ -88,10 +115,10 @@ class Index extends Component {
     })
   }
   //获取七牛token和url
-  getQiniuToken() {
-    const { commonStore } = this.props
-    commonStore.getQiniuToken()
-  }
+  // getQiniuToken() {
+  //   const { commonStore } = this.props
+  //   commonStore.getQiniuToken()
+  // }
   render () {
     const { yanzhi,aixin, mingxing, sorryImg,bannerList } = this.state
     return (
@@ -108,8 +135,8 @@ class Index extends Component {
               {
                 bannerList.map((banner,index)=>{
                   return(
-                    <SwiperItem>
-                      <Image src={banner.url} className='lbimg' key={index}></Image>
+                    <SwiperItem key={index}>
+                      <Image src={banner.url} className='lbimg' ></Image>
                     </SwiperItem>
                   )
                 })

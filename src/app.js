@@ -1,18 +1,22 @@
 import Taro, { Component } from '@tarojs/taro'
-import { Provider } from '@tarojs/mobx'
+// import { Provider } from '@tarojs/mobx'
+import { Provider } from '@tarojs/redux'
+import configStore from './store'
+
+
 import Index from './pages/index'
 import Handsome from './pages/handsome'
 import Personal from './pages/Personal'
 import Poster from './pages/Poster'
 import Movie from './pages/Movie'
 import Auth from './pages/Auth'
-
+import FaceRecord from './pages/FaceRecord'
 // eslint-disable-next-line import/first
 import '@tarojs/async-await'
-import counterStore from './store/counter'
-import commonStore from './store/common'
-import imageStore from './store/image'
-import userStore from './store/user'
+// import counterStore from './store/counter'
+// import commonStore from './store/common'
+// import imageStore from './store/image'
+// import userStore from './store/user'
 
 import './app.scss'
 // eslint-disable-next-line import/first
@@ -24,12 +28,13 @@ import 'taro-ui/dist/style/index.scss' // 全局引入一次即可
 //   require('nerv-devtools')
 // }
 
-const store = {
-  counterStore,
-  commonStore,
-  imageStore,
-  userStore
-}
+// const store = {
+//   counterStore,
+//   commonStore,
+//   imageStore,
+//   userStore
+// }
+const store = configStore()
 
 class App extends Component {
 
@@ -41,6 +46,7 @@ class App extends Component {
       'pages/poster/poster',
       'pages/movie/movie',
       'pages/auth/auth',
+      'pages/faceRecord/faceRecord',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -86,6 +92,7 @@ class App extends Component {
         <Poster />
         <Movie />
         <Auth />
+        <FaceRecord />
       </Provider>
     )
   }

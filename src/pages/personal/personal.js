@@ -1,14 +1,14 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View,Text,Image } from '@tarojs/components'
 import { AtButton, AtListItem } from 'taro-ui'
-import { observer, inject } from '@tarojs/mobx'
+// import { observer, inject } from '@tarojs/mobx'
 // import qiniuUploader from '../../utils/qiniuUploader'
 // import http  from '../../service/http'
 import './personal.scss'
-import Collect from '../collect'
+import Collect from '../components/collect'
 
-@inject('userStore')
-@observer
+// @inject('userStore')
+// @observer
 class Personal extends Component {
   constructor (props) {
     super(props)
@@ -27,6 +27,11 @@ class Personal extends Component {
     this.setState({
       userInfo: Taro.getStorageSync('userInfo') 
     }) 
+  }
+  linkTofaceRecord = () =>{
+    Taro.navigateTo({
+      url: '/pages/faceRecord/faceRecord'
+    })
   }
   hh = ()=>{
     Taro.showToast({
@@ -101,7 +106,7 @@ class Personal extends Component {
 
         </View>
         <View className='main'>
-          <Collect  onClick={this.hh}>
+          <Collect  onClick={this.linkTofaceRecord}>
             <AtListItem title='我的记录' arrow='right' />
           </Collect>
           <Collect onClick={this.hh}>

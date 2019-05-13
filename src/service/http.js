@@ -1,9 +1,9 @@
 import Taro from '@tarojs/taro'
 // import { AtToast } from "taro-ui"
 // const sessionkey = ''
-// const base = "http://192.168.1.106:8080/";
+const base = "http://192.168.1.106:8080/";
 // const base = "http://192.168.1.101:8080/";
-const base = "https://www.kaier001.com/";
+// const base = "https://www.kaier001.com/";
 //拦截器配置
 const interceptor = function (chain) {
   const requestParams = chain.requestParams  

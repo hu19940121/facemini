@@ -1,12 +1,11 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View,Form,Button } from '@tarojs/components'
 // import qiniuUploader from '../../utils/qiniuUploader'
-import http  from '../../service/http'
+import http  from '../../../service/http'
 import './index.scss'
 
 class Collect extends Component {
   componentDidMount () {
-
   }
   formSubmit=(e)=> {
     // console.log('e',e);

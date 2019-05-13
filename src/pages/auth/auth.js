@@ -1,20 +1,29 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View,Image } from '@tarojs/components'
 import { AtButton } from 'taro-ui'
-import { observer, inject } from '@tarojs/mobx'
+import { connect } from '@tarojs/redux'
+import { onGetUserInfo } from '../../actions/user'
+
 import { urlEncode } from '../../utils/util'
 import http  from '../../service/http'
 import './index.scss'
 import kobe from './images/kobe.png'
 
-@inject('userStore')
-@observer
+@connect(({ user }) => ({
+  user,
+}), (dispatch) => ({
+  onGetUserInfo (callback) {
+    dispatch(onGetUserInfo(callback))
+  }
+}))
 class Auth extends Component {
   config = {
     navigationBarTitleText: '授权',
   }
   componentDidMount () {
-
+    let pages = Taro.getCurrentPages()
+    console.log('pages',pages);
+    
   }
   //获取授权上一个页面
   getPrevPage(){
@@ -23,22 +32,11 @@ class Auth extends Component {
       return page.route !== "pages/auth/auth"
     })
     if (filterdPages.length > 0 ) { 
-      const paramsStr = urlEncode(filterdPages[0].options).slice(1) // 构建页面所需参数
-      let prevUrl =   `/${filterdPages[0].route}?${paramsStr}`
+      const paramsStr = urlEncode(filterdPages[filterdPages.length - 1].options).slice(1) // 构建页面所需参数
+      let prevUrl =   `/${filterdPages[filterdPages.length - 1].route}?${paramsStr}`
       return prevUrl
     }
     return ''
-  }
-  getUserInfo = () => {
-    const { userStore } = this.props
-    userStore.getUserInfo().then(()=>{
-      let prevPage = this.getPrevPage()      
-      if (prevPage) {
-        Taro.reLaunch({
-          url:prevPage
-        })
-      } 
-    })
   }
   onGetUserInfo = (userInfo) => {
     if (userInfo.detail.userInfo) {//同意
@@ -51,7 +49,16 @@ class Auth extends Component {
         }
         http.post('api/v1/xcxLogin',params).then(result=>{
           Taro.setStorageSync('sessionkey', result.data)
-          this.getUserInfo()
+          this.props.onGetUserInfo(()=>{
+            let prevPage = this.getPrevPage()
+            console.log('prevPage',prevPage);
+                            
+            if (prevPage) {
+              Taro.reLaunch({
+                url:prevPage
+              })
+            } 
+          })
         })
       })
     }
