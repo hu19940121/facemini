@@ -10,21 +10,21 @@ import './handsome.scss'
 import bgImage from './images/yanzhifenbg.png'
 import tiezhi from './images/tiezhi.png'
 import page_down from './images/page_down.png'
+import scan from './images/scan.png'
 
-let timer = null
 @connect(({ image,common }) => ({
   image,
   common
 }), (dispatch) => ({
-  onSetImage () {
-    dispatch(onSetImage())
+  onSetImage (image) {
+    dispatch(onSetImage(image))
   },
 }))
 class Handsome extends Component {
   constructor (props) {
     super(props)
     this.state= {
-      top: -380,
+      startScan: false,
       faceInfo: {
         gender:{},
         face_shape:{},
@@ -61,56 +61,31 @@ class Handsome extends Component {
   }
   imageOnload = () => {
     const {  image  } = this.props.image
-    this.setState({scanning: true})
-    this.startScan()
+    this.setState({scanning: true,startScan:true})
     http.get('api/v1/faceAPI',{ image }).then(res=>{
-      console.log('res',res);
-      this.endScan()
       if (res.data) {
         this.setState({
           faceInfo: res.data.face_list[0],
           isface: true,
           scanning: false,
+          startScan:false,
           faceImg:res.data.faceImg
         })
       } else {
         this.setState({
-          isface: false
+          isface: false,
+          startScan:false
         })
       }
     })
   }
-  // 开始扫描
-  startScan() {
-    let { top } = this.state
-    timer = setInterval(()=>{
-      top = top + 1
-      if (top === 0) {
-        top = -380
-        this.setState({
-          top
-        })
-      }
-      this.setState({
-        top
-      })
-    },5)
-  }
-  //结束扫描
-  endScan() {
-    clearInterval(timer)
-    this.setState({
-      top:-380
-    })
-  }
-
   render () {
     const {  image  } = this.props.image
-    const { top,faceInfo, isface, scanning,faceImg,userInfo } = this.state    
+    const { faceInfo, isface, scanning,faceImg,userInfo,startScan } = this.state    
     return (
       <View className='handsome'>
         <View className={`scan-wrapper ${ scanning ? "" : "hidden" }`}>
-          <View className='scan' style={'top:' + Taro.pxTransform(top)}></View>
+          <Image src={scan} className={`scan ${  startScan ? "startScan" : "" }`}></Image>
           <Image  src={image} onLoad={this.imageOnload} className='scan-image'>
           </Image>
         </View>

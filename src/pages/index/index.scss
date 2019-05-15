@@ -1,4 +1,6 @@
-
+page{
+  background: #eee;
+}
 .index{
   padding:10px;
   .banner{
@@ -17,12 +19,22 @@
   .hidden{
     display: none;
   }
-  .opera-cates{
+  .face-list-title{
+    background: #fff;
     width: 100%;
-    padding: 10px 10px;
+    padding: 20px;
+    margin: 10px 0;
+    font-size: 28px;
+    box-sizing: border-box;
+  }
+  .opera-cates{
     display: flex;
     justify-content: space-around;
     flex-wrap: nowrap;
+    background: #fff;
+    width: 100%;
+    padding: 60px 10px;
+    box-sizing: border-box;
     .cate-item{
       width: 200px;
       display: flex;

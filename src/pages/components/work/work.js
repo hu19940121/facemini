@@ -2,15 +2,18 @@ import Taro, { Component } from '@tarojs/taro'
 import { View,Image } from '@tarojs/components'
 import PropTypes from 'prop-types';
 import { connect } from '@tarojs/redux'
-import { deleteRecordImageById } from '../../../actions/user'
+import { onDeleteRecordImageById,onSetRecordOpenStatus } from '../../../actions/user'
 
 import './index.scss'
 
 @connect(({ user }) => ({
   user,
 }), (dispatch) => ({
-  deleteRecordImageById ({imageId}) {
-    dispatch(deleteRecordImageById({imageId}))
+  onDeleteRecordImageById(id,callback){
+    dispatch(onDeleteRecordImageById(id,callback))
+  },
+  onSetRecordOpenStatus(id,callback){
+    dispatch(onSetRecordOpenStatus(id,callback))
   }
 }))
 class Work extends Component {
@@ -22,15 +25,41 @@ class Work extends Component {
 
   componentDidMount () {
   }
-  showActionSheet=(imageId)=> {
+  showActionSheet=(image)=> {
+    let is_open = image.is_open //1公开 0 私密
     Taro.showActionSheet({
-      itemList: ['删除图片']
+      itemList: [`${is_open ? '设为私密' : '设为公开'}`,'删除图片']
     })
     //res.errMsg, res.tapIndex
     .then(res => {
       if (res.tapIndex === 0) {
-        // eslint-disable-next-line taro/this-props-function
-        this.props.deleteRecordImageById({imageId})
+        Taro.showModal({
+          title: '提示',
+          content: is_open ?'设为私密后首页将不显示哦~':'设为公开后将在首页显示哦~',
+        }).then(resmsg=>{
+          if (resmsg.confirm) {
+            let openStatus = is_open ? 0 : 1
+            this.props.onSetRecordOpenStatus({id:image.id,openStatus},()=>{
+              Taro.showToast({
+                title:'设置成功'
+              })
+            })
+          }
+        })
+      }
+      if (res.tapIndex === 1) {
+        Taro.showModal({
+          title: '提示',
+          content: '是否删除？',
+        }).then(resmsg=>{
+          if (resmsg.confirm) {
+            this.props.onDeleteRecordImageById(image.id,()=>{
+              Taro.showToast({
+                title:'删除成功'
+              })
+            })
+          }
+        })
       }
     })
     .catch((res) => console.log(res.errMsg))
@@ -49,7 +78,7 @@ class Work extends Component {
     let imgClass = data.length === 1 ? 'imgN imgN1': (data.length === 2 ? 'imgN imgN2':'imgN imgN3')
     let imglist = data.slice().map((item,index)=>{
       return (
-        <Image mode='aspectFill' onClick={() =>this.previewImage(item.face_img,data)} onLongpress={()=>this.showActionSheet(item.id)} className={imgClass} src={item.face_img} key={index} />
+        <Image mode='aspectFill' onClick={() =>this.previewImage(item.face_img,data)} onLongpress={()=>this.showActionSheet(item)} className={imgClass} src={item.face_img} key={index} />
       )
     })
     return (
@@ -65,4 +94,9 @@ class Work extends Component {
 Work.propTypes = {
   record: PropTypes.object
 };
+Work.defaultProps = {
+  record:{
+    data:[]
+  }
+}
 export default Work 

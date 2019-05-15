@@ -1,7 +1,15 @@
 page{
-  background: #FFE4C4	
+  background: #1E90FF	
 }
 
 .faceRecord{
   padding: 20px;
+  .nodata{
+    color: #fff;
+  }
+  .home-btn{
+    position: fixed;
+    right: 40px;
+    bottom: 70px;
+  }
 }

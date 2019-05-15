@@ -1,22 +1,25 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View,Image, Text,Swiper, SwiperItem } from '@tarojs/components'
-// import { AtButton } from 'taro-ui'
-// import { observer, inject } from '@tarojs/mobx'
 import { connect } from '@tarojs/redux'
 import qiniuUploader from '../../utils/qiniuUploader'
 import './index.scss'
 import Collect from '../components/collect'
+import IndexWork from '../components/indexWork'
 import http  from '../../service/http'
 import { onGetQiniuToken } from '../../actions/common'
+import { onGetAllUserFaceRecord } from '../../actions/user'
 import { onSetImage } from '../../actions/image'
-// @inject('counterStore','commonStore','imageStore')
-// @observer
-@connect(({ common,image }) => ({
+
+@connect(({ common,image,user }) => ({
   common,
-  image
+  image,
+  user
 }), (dispatch) => ({
   onGetQiniuToken () {
     dispatch(onGetQiniuToken())
+  },
+  onGetAllUserFaceRecord () {
+    dispatch(onGetAllUserFaceRecord())
   },
   onSetImage (image) {
     dispatch(onSetImage(image))
@@ -29,7 +32,7 @@ class Index extends Component {
       yanzhi: 'http://resource.kaier001.com/yanzhi.png',
       aixin:'http://resource.kaier001.com/aixin.png',
       mingxing: 'http://resource.kaier001.com/mingxing.png',
-      sorryImg: 'http://resource.kaier001.com/sorry.jpg',
+      // sorryImg: 'http://resource.kaier001.com/sorry.jpg',
       bannerList:[]
     }
   }
@@ -40,11 +43,12 @@ class Index extends Component {
   }
   onPullDownRefresh(){
     Taro.stopPullDownRefresh()//停止下拉动作过渡
+    this.props.onGetAllUserFaceRecord()
     this.getBanner()
   }
   componentDidMount () { 
     this.props.onGetQiniuToken()
-    // this.getQiniuToken()
+    this.props.onGetAllUserFaceRecord()
     // eslint-disable-next-line no-undef
     wx.showShareMenu({
       withShareTicket: true
@@ -52,6 +56,7 @@ class Index extends Component {
   }
   componentDidShow() {
     this.getBanner()
+    this.props.onGetAllUserFaceRecord()
   }
   getBanner() {
     http.get('api/v1/getBanner',{},false).then(res=>{      
@@ -74,29 +79,7 @@ class Index extends Component {
     .then(res => console.log(res.confirm, res.cancel))
   }
   upLoadImg = (formId) => {
-    // let that = this
-    const sessionkey = Taro.getStorageSync('sessionkey')
-    if (!sessionkey) {
-      Taro.showModal({
-        title: '请登录',
-        content: '为了您更好的服务，请先登录',
-      })
-      .then(res => {
-        if (res.confirm) {
-          Taro.navigateTo({
-            url: '/pages/auth/auth'
-          })
-          // Taro.switchTab({
-          //   url: '/pages/personal/personal'
-          // })
-        }
-      })
-      return false
-    }
-    // const { commonStore: { imgBucketUrl,imgToken }, imageStore } = this.props
-    const { imgBucketUrl,imgToken } = this.props.common
-    console.log('imgBucketUrl,imgToken',imgBucketUrl,imgToken);
-    
+    const { imgBucketUrl,imgToken } = this.props.common    
     Taro.chooseImage().then(res=>{
       qiniuUploader.upload(res.tempFilePaths[0], (respic) => {
         console.log('respic.imageURL',respic.imageURL);
@@ -114,13 +97,14 @@ class Index extends Component {
       });      
     })
   }
-  //获取七牛token和url
-  // getQiniuToken() {
-  //   const { commonStore } = this.props
-  //   commonStore.getQiniuToken()
-  // }
   render () {
-    const { yanzhi,aixin, mingxing, sorryImg,bannerList } = this.state
+    const { yanzhi,aixin, mingxing,bannerList } = this.state
+    const { allUserFaceRecord } = this.props.user
+    let noDataDom = (
+      <View>
+        暂无数据~
+      </View>
+    )
     return (
       <View className='index'>
         <official-account></official-account>
@@ -163,12 +147,21 @@ class Index extends Component {
             </View>
           </Collect>
         </View>
-        <Collect>
+        <View className='face-list-title'>
+            美照广场
+        </View>
+        <View >
+          {
+            allUserFaceRecord.map((workInfo,index)=> <IndexWork workInfo={workInfo} key={index} />)
+          }
+          { allUserFaceRecord.length === 0 ? noDataDom : ''}
+        </View>
+        {/* <Collect>
           <View className='sorry'>
             <Image mode='aspectFit' className='sorry-image' src={sorryImg}></Image>
             <Text>更多功能近期开放，敬请期待~</Text>
           </View>
-        </Collect>
+        </Collect> */}
       </View>
     )
   }
