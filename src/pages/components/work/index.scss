@@ -15,6 +15,22 @@
     .imgN{
       margin-right:26px;
       margin-top:10px;
+      position: relative;
+      .checkBox{
+        position: absolute;
+        top: 2px;
+        right: 10px;
+        width: 50px;
+        height: 50px;
+        &.nochoose{
+          background: url('./images/nochoose.png') no-repeat;
+          background-size: cover;
+        }
+        &.choose{
+          background: url('./images/choose.png') no-repeat;
+          background-size: cover;
+        }
+      }
     }
     .imgN1{
       width: 58%;

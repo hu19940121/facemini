@@ -50,9 +50,7 @@ class Auth extends Component {
         http.post('api/v1/xcxLogin',params).then(result=>{
           Taro.setStorageSync('sessionkey', result.data)
           this.props.onGetUserInfo(()=>{
-            let prevPage = this.getPrevPage()
-            console.log('prevPage',prevPage);
-                            
+            let prevPage = this.getPrevPage()                            
             if (prevPage) {
               Taro.reLaunch({
                 url:prevPage

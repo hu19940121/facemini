@@ -2,9 +2,11 @@ import Taro, { Component } from '@tarojs/taro'
 import { View,Text } from '@tarojs/components'
 import { AtFab,AtNoticebar  } from 'taro-ui'
 import { connect } from '@tarojs/redux'
-import { onSetUserFaceRecord } from '../../actions/user'
+import { onSetUserFaceRecord,onDeleteRecordImageByIds } from '../../actions/user'
 
 import Work from '../components/work/work'
+import OperateMenu from '../components/operateMenu'
+
 import './index.scss'
 
 @connect(({ user }) => ({
@@ -12,7 +14,10 @@ import './index.scss'
 }), (dispatch) => ({
   onSetUserFaceRecord () {
     dispatch(onSetUserFaceRecord())
-  }
+  },
+  onDeleteRecordImageByIds(ids) {
+    dispatch(onDeleteRecordImageByIds(ids))
+  },
 }))
 class FaceRecord extends Component {
   constructor(props){
@@ -24,8 +29,9 @@ class FaceRecord extends Component {
     this.props.onSetUserFaceRecord()
   }
   config = {
-    navigationBarTitleText: '我的记录'
+    navigationBarTitleText: '未发布记录'
   }
+
   linkToHome = () =>{
     Taro.switchTab({
       url:'/pages/index/index'
@@ -57,6 +63,7 @@ class FaceRecord extends Component {
             </AtFab>
           </View>
         </View>
+        <OperateMenu />
       </View>
 
     )

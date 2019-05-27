@@ -42,12 +42,30 @@ export const deleteRecordImageById = ({imageId}) => {
     }
   }
 }
+export const deleteRecordImageByIds = (ids) => {
+  console.log('ssssssss',ids);
+  
+  return {
+    type: 'deleteRecordImageByIds',
+    payload:{
+      ids
+    }
+  }
+}
 export const setRecordOpenStatus = ({imageId,openStatus}) => {
   return {
     type: SET_RECORD_OPEN_STATUS,
     payload:{
       imageId,
       openStatus
+    }
+  }
+}
+export const onSetImageIsCheckedById = ({id}) => {  
+  return {
+    type: 'onSetImageIsCheckedById',
+    payload:{
+      id
     }
   }
 }
@@ -80,10 +98,25 @@ export  function onDeleteRecordImageById (id,callback) {
     callback && callback()
   }
 }
+export  function onDeleteRecordImageByIds (ids,callback) {
+  return async (dispatch) => {
+    await http.get('api/v1/face/deleteByIds',{ ids })
+    dispatch(deleteRecordImageByIds(ids))
+    callback && callback()
+  }
+}
 export  function onSetRecordOpenStatus ({id,openStatus},callback) {
   return async dispatch => {
     await http.post('api/v1/face/setOpenStatus',{ id,openStatus })
     dispatch(setRecordOpenStatus({imageId:id,openStatus}))
     callback && callback()
+  }
+}
+
+export  function onPublishWorks ({ids,content},callback) {
+  return  async () => {
+    console.log(ids,content);
+    let res = await http.post('api/v1/clock/add',{ ids:JSON.stringify(ids),content })
+    callback && callback(res)
   }
 }

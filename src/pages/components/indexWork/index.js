@@ -11,21 +11,19 @@ class indexWork extends Component {
   }
   componentDidMount () {
   }
-  previewImage = (current,data) =>  {
-    let urls = data.map(item=>{
-      return item.face_img
-    })
+  previewImage = (current,urls) =>  {
     Taro.previewImage({
       current,
       urls:urls
     })
   }
   render () {
-    let { workInfo, workInfo:{ faces} } = this.props    
+    let { workInfo, workInfo:{ clock } } = this.props
+    let faces = clock.face_images ? JSON.parse(clock.face_images) : []
     let imgClass = faces.length === 1 ? 'imgN imgN1': (faces.length === 2 ? 'imgN imgN2':'imgN imgN3')
-    let imglist = faces.map((item,index)=>{
+    let imglist = faces.map((image,index)=>{
       return (
-        <Image mode='aspectFill' onClick={() =>this.previewImage(item.face_img,faces)} className={imgClass} src={item.face_img} key={index} />
+        <Image mode='aspectFill' onClick={() =>this.previewImage(image,faces)} className={imgClass} src={image} key={index} />
       )
     })
     return (
@@ -35,6 +33,9 @@ class indexWork extends Component {
           <View className='username'>
             <Text>{workInfo.nickName}</Text>
           </View>
+        </View>
+        <View className='content-text'>
+          <Text>{clock.content}</Text>
         </View>
         <View className='img-list'>
           {imglist}
@@ -48,7 +49,7 @@ indexWork.propTypes = {
 };
 indexWork.defaultProps = {
   workInfo:{
-    faces:[]
+    clock:{}
   }
 };
 

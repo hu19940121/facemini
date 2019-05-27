@@ -11,12 +11,10 @@ import Poster from './pages/Poster'
 import Movie from './pages/Movie'
 import Auth from './pages/Auth'
 import FaceRecord from './pages/FaceRecord'
+import MyClock from './pages/MyClock'
+
 // eslint-disable-next-line import/first
 import '@tarojs/async-await'
-// import counterStore from './store/counter'
-// import commonStore from './store/common'
-// import imageStore from './store/image'
-// import userStore from './store/user'
 
 import './app.scss'
 // eslint-disable-next-line import/first
@@ -26,13 +24,6 @@ import 'taro-ui/dist/style/index.scss' // 全局引入一次即可
 // 取消以下注释：
 // if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
 //   require('nerv-devtools')
-// }
-
-// const store = {
-//   counterStore,
-//   commonStore,
-//   imageStore,
-//   userStore
 // }
 const store = configStore()
 
@@ -47,6 +38,7 @@ class App extends Component {
       'pages/movie/movie',
       'pages/auth/auth',
       'pages/faceRecord/faceRecord',
+      'pages/myClock/myClock',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -93,6 +85,7 @@ class App extends Component {
         <Movie />
         <Auth />
         <FaceRecord />
+        <MyClock />
       </Provider>
     )
   }

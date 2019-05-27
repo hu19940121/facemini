@@ -9,11 +9,13 @@ import http  from '../../service/http'
 import { onGetQiniuToken } from '../../actions/common'
 import { onGetAllUserFaceRecord } from '../../actions/user'
 import { onSetImage } from '../../actions/image'
+import { onGetAllUserClocklist } from '../../actions/clock'
 
-@connect(({ common,image,user }) => ({
+@connect(({ common,image,user, clock }) => ({
   common,
   image,
-  user
+  user,
+  clock
 }), (dispatch) => ({
   onGetQiniuToken () {
     dispatch(onGetQiniuToken())
@@ -24,6 +26,9 @@ import { onSetImage } from '../../actions/image'
   onSetImage (image) {
     dispatch(onSetImage(image))
   },
+  onGetAllUserClocklist() {
+    dispatch(onGetAllUserClocklist())
+  }
 }))
 class Index extends Component {
   constructor (props) {
@@ -47,6 +52,7 @@ class Index extends Component {
     this.getBanner()
   }
   componentDidMount () { 
+    this.props.onGetAllUserClocklist()
     this.props.onGetQiniuToken()
     this.props.onGetAllUserFaceRecord()
     // eslint-disable-next-line no-undef
@@ -99,7 +105,8 @@ class Index extends Component {
   }
   render () {
     const { yanzhi,aixin, mingxing,bannerList } = this.state
-    const { allUserFaceRecord } = this.props.user
+    // const { allUserFaceRecord } = this.props.user
+    const { allUserClockList } = this.props.clock
     let noDataDom = (
       <View>
         暂无数据~
@@ -152,16 +159,10 @@ class Index extends Component {
         </View>
         <View >
           {
-            allUserFaceRecord.map((workInfo,index)=> <IndexWork workInfo={workInfo} key={index} />)
+            allUserClockList.map((workInfo,index)=> <IndexWork workInfo={workInfo} key={index} />)
           }
-          { allUserFaceRecord.length === 0 ? noDataDom : ''}
+          { allUserClockList.length === 0 ? noDataDom : ''}
         </View>
-        {/* <Collect>
-          <View className='sorry'>
-            <Image mode='aspectFit' className='sorry-image' src={sorryImg}></Image>
-            <Text>更多功能近期开放，敬请期待~</Text>
-          </View>
-        </Collect> */}
       </View>
     )
   }

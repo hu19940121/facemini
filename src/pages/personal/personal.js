@@ -33,46 +33,26 @@ class Personal extends Component {
       url: '/pages/faceRecord/faceRecord'
     })
   }
-  hh = ()=>{
-    Taro.showToast({
-      title: '莫慌，正在开发中~~',
-      icon: 'none',
-      duration: 2000
+  linkToMyClock = () =>{
+    Taro.navigateTo({
+      url: '/pages/myClock/myClock'
     })
   }
+  // hh = ()=>{
+  //   Taro.showToast({
+  //     title: '莫慌，正在开发中~~',
+  //     icon: 'none',
+  //     duration: 2000
+  //   })
+  // }
   //跳到授权页面
   linkToAuth = ()=>{
     Taro.navigateTo({
       url: '/pages/auth/auth'
     })
   }
-  // getUserInfo = () => {
-  //   const { userStore } = this.props
-  //   userStore.getUserInfo().then(()=>{
-  //     this.setState({
-  //       userInfo:Taro.getStorageSync('userInfo')
-  //     })
-  //   })
-  // }
-  // onGetUserInfo = (userInfo) => {
-  //   if (userInfo.detail.userInfo) {//同意
-  //     Taro.login().then(res=>{
-  //       let params = {
-  //         code: res.code,
-  //         signature:userInfo.currentTarget.signature,
-  //         encryptedData: userInfo.currentTarget.encryptedData,
-  //         iv:userInfo.currentTarget.iv,
-  //       }
-  //       http.post('api/v1/xcxLogin',params).then(result=>{
-  //         Taro.setStorageSync('sessionkey', result.data)
-  //         this.getUserInfo()
-  //       })
-  //     })
-  //   }
-  // }
   render () {
     const { defaultAvatar,userInfo } = this.state  
-    // const {userStore:{ userInfo }  } =  this.props
     let left
     if (userInfo) {
       left = (
@@ -91,14 +71,9 @@ class Personal extends Component {
     }
     return (
       <View className='personal'>
-        
-        {/* <AtButton lang='zh_CN' type='primary' openType='getUserInfo' onGetUserInfo={this.onGetUserInfo}>登录</AtButton>
-        <AtButton  type='secondary' onClick={this.getUserInfo}>获取用户信息</AtButton> */}
         <View className='banner'>
           <View className='left'>
             {left}
-            {/* <View className='nickName'>梦如南笙</View>
-            <Text className='sign'>梦如南笙求我终生。</Text> */}
           </View>
           <View className='right'>
             <Image src={userInfo ? userInfo.avatarUrl : defaultAvatar}></Image>
@@ -107,10 +82,10 @@ class Personal extends Component {
         </View>
         <View className='main'>
           <Collect  onClick={this.linkTofaceRecord}>
-            <AtListItem title='我的记录' arrow='right' />
+            <AtListItem title='我的记录（未发布广场）' arrow='right' />
           </Collect>
-          <Collect onClick={this.hh}>
-            <AtListItem  title='我的颜值' arrow='right' />
+          <Collect onClick={this.linkToMyClock}>
+            <AtListItem  title='我的记录（已发布广场）' arrow='right' />
           </Collect>
         </View>
       </View>
