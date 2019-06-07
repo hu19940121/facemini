@@ -1,8 +1,18 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View,Image,Text } from '@tarojs/components'
+import { connect } from '@tarojs/redux'
 import PropTypes from 'prop-types';
 import './index.scss'
+import del from './images/del.png'
+import { onDeleteUserClock } from '../../../actions/clock'
 
+@connect(({ clock }) => ({
+  clock,
+}), (dispatch) => ({
+  onDeleteUserClock(id,callback) {
+    dispatch(onDeleteUserClock(id,callback))
+  }
+}))
 class indexWork extends Component {
   constructor (props) {
     super(props)
@@ -17,6 +27,16 @@ class indexWork extends Component {
       urls:urls
     })
   }
+  delete=(id)=> {    
+    Taro.showModal({
+      title: '提示',
+      content: '删除后不再广场显示，若想彻底删除，请到我的记录（未发布记录）中长按图片删除！',
+    }).then(res=>{
+      if (res.confirm) {
+        this.props.onDeleteUserClock(id,()=>{ Taro.showToast({ title:'删除成功' }) })
+      }
+    })
+  }
   render () {
     let { workInfo, workInfo:{ clock } } = this.props
     let faces = clock.face_images ? JSON.parse(clock.face_images) : []
@@ -29,9 +49,14 @@ class indexWork extends Component {
     return (
       <View className='indexwork'>
         <View className='title'>
-          <Image className='avatar' src={workInfo.avatarUrl} />
-          <View className='username'>
-            <Text>{workInfo.nickName}</Text>
+          <View className='title-left'>
+            <Image className='avatar' src={workInfo.avatarUrl} />
+            <View className='username'>
+              <Text>{workInfo.nickName}</Text>
+            </View>
+          </View>
+          <View className='title-right'>
+            <Image onClick={() =>{this.delete(clock.id)}} className='del' src={del} style={{ display: this.props.showDelBtn ? '' :'none' }} />
           </View>
         </View>
         <View className='content-text'>
@@ -45,12 +70,13 @@ class indexWork extends Component {
   }
 }
 indexWork.propTypes = {
-  workInfo: PropTypes.object
+  workInfo: PropTypes.object,
 };
 indexWork.defaultProps = {
   workInfo:{
     clock:{}
-  }
+  },
+  showDelBtn: true,
 };
 
 export default indexWork 

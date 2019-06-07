@@ -1,5 +1,24 @@
+
+
 .operate-box{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   position: fixed;
-  bottom: 20px;
+  bottom: 0px;
   left: 0;
+  width: 100%;
+  padding: 10px;
+  background-color: #fff;
+  .box-item{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    image{
+      width: 50px;
+      height: 50px;
+    }
+  }
 }

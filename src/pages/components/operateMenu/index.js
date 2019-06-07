@@ -1,10 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View,Button } from '@tarojs/components'
+import { View,Button,Text,Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import { AtModal, AtModalHeader, AtModalContent, AtModalAction,AtTextarea } from "taro-ui"
-import { onPublishWorks,onDeleteRecordImageByIds } from '../../../actions/user'
+import { onPublishWorks,onDeleteRecordImageByIds,onSetUserFaceRecord } from '../../../actions/user'
 import { onAddUserClock } from '../../../actions/clock'
 
+import del from './images/del.png'
+import can from './images/can.png'
+import pub from './images/pub.png'
 
 import './index.scss'
 
@@ -26,7 +29,10 @@ import './index.scss'
   },
   onDeleteRecordImageByIds(ids,callback){
     dispatch(onDeleteRecordImageByIds(ids,callback))
-  }
+  },
+  onSetUserFaceRecord (callback) {
+    dispatch(onSetUserFaceRecord(callback))
+  },
 }))
 class operateMenu extends Component {
   constructor(props){
@@ -37,6 +43,9 @@ class operateMenu extends Component {
     }
   }
   componentDidMount () {
+  }
+  componentWillUnmount() { //页面卸载取消编辑状态
+    this.props.onSetIsEdit(false)
   }
   handleChange = (event) =>{
     this.setState({
@@ -57,16 +66,18 @@ class operateMenu extends Component {
       return false
     }
     this.props.onPublishWorks({ids,content},(res)=>{
-      Taro.showToast({
-        title:'操作成功',
-        icon:'none'
-      })
+
       this.setState({
         visible:false
       })
       this.props.onAddUserClock(res.data)
       this.props.onSetIsEdit(false)
-      
+      Taro.switchTab({
+        url:'/pages/index/index'
+      })
+      // this.props.onSetUserFaceRecord(()=>{
+
+      // })
     })
   }
   //根据选中状态找到要操作的id们
@@ -86,20 +97,29 @@ class operateMenu extends Component {
     let ids = this.findOperateIds()
     if (ids.length===0) {
       Taro.showToast({
-        title:'请选择要删除的图片~'
+        title:'请选择要删除的图片~',
+        icon:'none'
       })
       return false
     }
-    this.props.onDeleteRecordImageByIds(ids,()=>{
-      Taro.showToast({title:'删除成功~'})
-      this.props.onSetIsEdit(false)
+    Taro.showModal({
+      title: '提示',
+      content: '确认删除?',
+    }).then(res=>{
+      if (res.confirm) {
+        this.props.onDeleteRecordImageByIds(ids,()=>{
+          Taro.showToast({title:'删除成功~'})
+          this.props.onSetIsEdit(false)
+        })
+      }
     })
+
   }
   //
   openModel = ()=>{
     let ids = this.findOperateIds()
     if (ids.length === 0) {
-      Taro.showToast({title:'请先选择图片~',icon:'none'})
+      Taro.showToast({title:'请先选择要发布的图片~',icon:'none'})
       return false
     }
     this.setState({
@@ -112,9 +132,18 @@ class operateMenu extends Component {
     return (
       <View>
         <View style={{ 'display': isEdit ? '':'none' }} className='operate-box'>
-          <Button onClick={this.delImages}>删除</Button>
-          <Button onClick={this.openModel}>发布</Button>
-          <Button onClick={()=>this.props.onSetIsEdit(false)}>取消</Button>
+          <View className='box-item' onClick={this.delImages}>
+            <Image src={del} />
+            <Text>删除</Text>
+          </View>
+          <View className='box-item' onClick={this.openModel}>
+            <Image src={pub} />
+            <Text>发布</Text>
+          </View>
+          <View className='box-item' onClick={()=>this.props.onSetIsEdit(false)}>
+            <Image src={can} />
+            <Text>取消</Text>
+          </View>
         </View>
         <AtModal 
           isOpened={this.state.visible}  
@@ -122,12 +151,14 @@ class operateMenu extends Component {
         >
           <AtModalHeader>说几句话吧~</AtModalHeader>
           <AtModalContent>
-          <AtTextarea
-            value={this.state.content}
-            onChange={this.handleChange}
-            maxLength={200}
-            placeholder='说几句话吧...'
-          />
+          <View style={{display:this.state.visible ? '':'none'}}>
+            <AtTextarea
+              value={this.state.content}
+              onChange={this.handleChange}
+              maxLength={200}
+              placeholder='说几句话吧...'
+            />
+          </View>
           </AtModalContent>
           <AtModalAction>
             <Button onClick={()=>{this.setState({visible:false})}}>取消</Button>

@@ -26,9 +26,14 @@ export const setUserClockList = (userClockList) => {
     }
   }
 }
-
-
-
+export const deleteUserClock = (id) => {
+  return {
+    type: 'deleteUserClock',
+    payload:{
+      id
+    }
+  }
+}
 
 //异步的 action
 export  function onGetAllUserClocklist  () {
@@ -42,6 +47,16 @@ export  function onGetUserClocklist  () {
   return async dispatch => {
     let res = await http.get('api/v1/clock/getUserlist')    
     dispatch(setUserClockList(res.data))
+  }
+}
+
+export  function onDeleteUserClock(id,callback) {
+  console.log('action里de id',id);
+  
+  return async dispatch => {
+    await http.get('api/v1/clock/delete',{id})
+    dispatch(deleteUserClock(id))
+    callback && callback()
   }
 }
 

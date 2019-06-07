@@ -50,7 +50,7 @@ class FaceRecord extends Component {
         快去测一测你的颜值吧~
       </View>
     )
-    const NoticeBarText = userFaceRecord.length === 0  ? '快去测一测你的颜值吧' :'长按图片可以发布到广场哦~'
+    const NoticeBarText = userFaceRecord.length === 0  ? '快去测一测你的颜值吧' :'长按图片可以发布到广场哦~  发布到广场的图片可以在我的记录（已发布广场）中删除'
     return (
       <View>
         <AtNoticebar marquee icon='volume-plus' close>{NoticeBarText}</AtNoticebar>

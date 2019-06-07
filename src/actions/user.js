@@ -78,10 +78,11 @@ export  function onGetUserInfo  (callback) {
   }
 }
 
-export  function onSetUserFaceRecord  () { //用户下的颜值记录
+export  function onSetUserFaceRecord  (callback) { //用户下的颜值记录
   return async dispatch => {
     let res = await http.get('api/v1/getUserFaceRecord')
     dispatch(setUserFaceRecord({userFaceRecord:res.data || []}))
+    callback && callback()
   }
 }
 

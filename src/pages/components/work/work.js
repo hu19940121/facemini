@@ -7,7 +7,7 @@ import { onDeleteRecordImageById,onSetRecordOpenStatus,onSetImageIsCheckedById }
 import './index.scss'
 
 const mapStateToProps = (state) => {  
-  return { user: state.user }
+  return { user: state.user,isEdit: state.user.isEdit }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -36,54 +36,22 @@ class Work extends Component {
   chooseOrCancelChoose = (id)=>{    
     this.props.onSetImageIsCheckedById(id)
   }
-  showActionSheet=(image)=> {
+  showActionSheet=()=> {
     this.props.onSetIsEdit(true)
-    // let is_open = image.is_open //1公开 0 私密
-    // Taro.showActionSheet({
-    //   itemList: [`${is_open ? '设为私密' : '设为公开'}`,'删除图片']
-    // })
-    // //res.errMsg, res.tapIndex
-    // .then(res => {
-    //   if (res.tapIndex === 0) {
-    //     Taro.showModal({
-    //       title: '提示',
-    //       content: is_open ?'设为私密后首页将不显示哦~':'设为公开后将在首页显示哦~',
-    //     }).then(resmsg=>{
-    //       if (resmsg.confirm) {
-    //         let openStatus = is_open ? 0 : 1
-    //         this.props.onSetRecordOpenStatus({id:image.id,openStatus},()=>{
-    //           Taro.showToast({
-    //             title:'设置成功'
-    //           })
-    //         })
-    //       }
-    //     })
-    //   }
-    //   if (res.tapIndex === 1) {
-    //     Taro.showModal({
-    //       title: '提示',
-    //       content: '是否删除？',
-    //     }).then(resmsg=>{
-    //       if (resmsg.confirm) {
-    //         this.props.onDeleteRecordImageById(image.id,()=>{
-    //           Taro.showToast({
-    //             title:'删除成功'
-    //           })
-    //         })
-    //       }
-    //     })
-    //   }
-    // })
-    // .catch((res) => console.log(res.errMsg))
   }
-  previewImage = (current,data) =>  {
-    let urls = data.map(item=>{
-      return item.face_img
-    })
-    Taro.previewImage({
-      current,
-      urls:urls
-    })
+  previewImage = (faceInfo,data) =>  {
+    if (this.props.isEdit) { //编辑状态下点击图片是选中
+      this.chooseOrCancelChoose(faceInfo.id)
+    } else {
+      let urls = data.map(item=>{ //非编辑状态下预览
+        return item.face_img
+      })
+      Taro.previewImage({
+        current:faceInfo.face_img,
+        urls:urls
+      })
+    }
+
   }
   render () {
     let { record,record:{ data },user:{ isEdit } } = this.props    
@@ -91,8 +59,8 @@ class Work extends Component {
     let imglist = data.slice().map((item)=>{
       return (
         <View className={imgClass} key={item.id}>
-          <View className={item.isCheck ? 'checkBox choose' : 'checkBox nochoose'} style={{ display: isEdit ? '' :'none' }} onClick={()=>this.chooseOrCancelChoose(item.id)}></View>
-          <Image style={{width:'100%',height:'100%'}} mode='aspectFill' onClick={() =>this.previewImage(item.face_img,data)} onLongpress={()=>this.showActionSheet(item)}  src={item.face_img}  />
+          <View className={item.isCheck ? 'checkBox choose' : 'checkBox nochoose'} style={{ display: isEdit ? '' :'none' }}></View>
+          <Image style={{width:'100%',height:'100%'}} mode='aspectFill' onClick={() =>this.previewImage(item,data)} onLongpress={()=>this.showActionSheet(item)}  src={item.face_img}  />
         </View>
       )
     })

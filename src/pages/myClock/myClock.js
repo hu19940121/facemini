@@ -1,8 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View } from '@tarojs/components'
+import { View ,Text} from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
-import './personal.scss'
+import './myClock.scss'
 import IndexWork from '../components/indexWork'
 import { onGetUserClocklist } from '../../actions/clock'
 
@@ -19,11 +19,15 @@ class Movie extends Component {
   }
   render () {
     const { userClockList } = this.props.clock
+    const noDataDom = (
+      <Text>暂无数据</Text>
+    )
     return (
       <View>
           {
             userClockList.map((workInfo,index)=> <IndexWork workInfo={workInfo} key={index} />)
           }
+          { userClockList.length === 0 ? noDataDom :'' }
       </View>
     )
   }

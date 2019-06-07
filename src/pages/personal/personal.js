@@ -58,7 +58,7 @@ class Personal extends Component {
       left = (
         <View className='left'>
           <View className='nickName'>{userInfo.nickName}</View>
-          <Text className='sign'>梦如南笙求我终生。</Text>
+          <Text className='sign'>梦如南笙囚我终生。</Text>
         </View>
       )
     } else {
