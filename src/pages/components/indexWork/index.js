@@ -4,14 +4,19 @@ import { connect } from '@tarojs/redux'
 import PropTypes from 'prop-types';
 import './index.scss'
 import del from './images/del.png'
-import { onDeleteUserClock } from '../../../actions/clock'
+import praise_no_choosed from './images/praise.png'
+import praise_choosed from './images/praise_choosed.png'
+import { onDeleteUserClock,onPraise } from '../../../actions/clock'
 
 @connect(({ clock }) => ({
   clock,
 }), (dispatch) => ({
   onDeleteUserClock(id,callback) {
     dispatch(onDeleteUserClock(id,callback))
-  }
+  },
+  onPraise(clockId,callback) {
+    dispatch(onPraise(clockId,callback))
+  },
 }))
 class indexWork extends Component {
   constructor (props) {
@@ -33,9 +38,16 @@ class indexWork extends Component {
       content: '删除后不再广场显示，若想彻底删除，请到我的记录（未发布记录）中长按图片删除！',
     }).then(res=>{
       if (res.confirm) {
-        this.props.onDeleteUserClock(id,()=>{ Taro.showToast({ title:'删除成功' }) })
+        this.props.onDeleteUserClock(~~id,()=>{ Taro.showToast({ title:'删除成功' }) })
       }
     })
+  }
+  praise= (clockId,isPraise) =>{
+    if (isPraise) {
+      Taro.showToast({ title:'您已经点过赞了哦~',icon:'none' })
+      return false
+    }
+    this.props.onPraise(clockId,()=>{ Taro.showToast({ title:'点赞成功!',icon:'none' }) })
   }
   render () {
     let { workInfo, workInfo:{ clock } } = this.props
@@ -57,6 +69,10 @@ class indexWork extends Component {
           </View>
           <View className='title-right'>
             <Image onClick={() =>{this.delete(clock.id)}} className='del' src={del} style={{ display: this.props.showDelBtn ? '' :'none' }} />
+            <View className='praise-wrapper' style={{ display: this.props.showPraiseBtn ? '' :'none' }}>
+              <Text className='praise-num'>{ clock.praise_num ? clock.praise_num : '' }</Text>
+              <Image onClick={() =>{this.praise(clock.id,workInfo.isPraise)}} className='pra' src={workInfo.isPraise === 1 ? praise_choosed : praise_no_choosed}  />
+            </View>
           </View>
         </View>
         <View className='content-text'>
@@ -77,6 +93,7 @@ indexWork.defaultProps = {
     clock:{}
   },
   showDelBtn: true,
+  showPraiseBtn: false
 };
 
 export default indexWork 

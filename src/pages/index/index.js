@@ -159,7 +159,7 @@ class Index extends Component {
         </View>
         <View >
           {
-            allUserClockList.map((workInfo,index)=> <IndexWork workInfo={workInfo} showDelBtn={false} key={index} />)
+            allUserClockList.map((workInfo,index)=> <IndexWork workInfo={workInfo} showDelBtn={false} showPraiseBtn key={index} />)
           }
           { allUserClockList.length === 0 ? noDataDom : ''}
         </View>

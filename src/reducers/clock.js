@@ -23,15 +23,26 @@ export default function counter (state = INITIAL_STATE, action) {
         ...state,
         allUserClockList:copyList
       }
-    case 'deleteUserClock':
-      console.log('action.payload.id',action.payload.id);
-      
+    case 'deleteUserClock':      
       let deletedUserClockList = state.userClockList.filter((item)=>item.clock.id !== action.payload.id)
       let deletedAllUserClockList = state.allUserClockList.filter((item)=>item.clock.id !== action.payload.id)
       return {
         ...state,
         allUserClockList:deletedAllUserClockList,
         userClockList:deletedUserClockList
+      }
+    case 'setClockListPraiseStatus':
+      console.log('action.payload.clockId',action.payload.clockId);
+      let copyList2 = JSON.parse(JSON.stringify(state.allUserClockList))
+      copyList2.map(item=>{
+        if (item.clock.id === action.payload.clockId) {
+          item.isPraise = 1
+          ++item.clock.praise_num
+        }
+      })
+      return {
+        ...state,
+        allUserClockList:copyList2,
       }
     default:
       return state
